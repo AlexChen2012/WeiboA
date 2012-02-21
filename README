@@ -1,0 +1,16 @@
+				README
+
+The WeiboA is the light client to the sina weibo.
+
+And it only has these functions:
+
+1. Authenticate the user.
+2. Verfiy the User.
+3. List the Tweet for the user.
+
+
+And In the future, it will be improved.
+the codes part of authenticate is from the andtweet, so please
+respect the apache licence.
+
+Thanks
