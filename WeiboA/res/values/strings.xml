@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World!</string>
+    <string name="app_name">WeiboA</string>
+    <string name="buttonSignIn">Login lala</string>
+    <string name="buttonOAuth">Authorize</string>
+    
+   <string name="title_acquiring_a_request_token">Acquiring a request token</string>
+   <string name="text_acquiring_a_request_token">Please wait while WeiboA is acquiring a request token for OAuth</string>
+   <string name="request_token_successed">Request Token Success</string>
+   <string name="request_token_failed">Request Token failed</string>
+   <string name="do_not_need_authrize">You don\'t Need to Authrize!</string>
+   <string name="title_verify_credential">Verify Credential</string>
+   <string name="text_verify_credential">Please wait WeiboA is verifying credential</string>
+   <string name="text_authrize_first">Please Authrize first, Thanks!</string>
+   <string name="titleTimeline">Time line show</string>
+   <string name="loading">Loading.....</string>
+   
+</resources>

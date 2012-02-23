@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:background="@drawable/login" android:layout_height="match_parent">
+  
+	<TextView
+		android:id="@+id/welcome"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="20dip"
+		android:layout_marginRight="20dip"
+		android:textColor="@android:color/black"	
+		android:textSize="20dip"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+	></TextView>
+  <!-- username EditText -->
+  <!-- android:layout_weight="1" -->
+
+<!-- Update Button -->
+	<Button 
+		android:layout_height="wrap_content" 
+		android:text="@string/buttonSignIn" 
+		android:layout_width="wrap_content" 
+		android:id="@+id/buttonLogin" 
+		android:layout_gravity="center_horizontal"
+		android:padding="10dp">
+	</Button>
+	
+	<RelativeLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    >
+
+	    <Button 
+		    android:layout_height="wrap_content" 
+	        android:text="@string/buttonOAuth" 
+	        android:layout_width="wrap_content" 
+	        android:id="@+id/buttonOAuth"
+	        android:layout_alignParentBottom="true"
+	        android:layout_alignParentRight="true"
+	        android:padding="20dp"
+	        />
+	</RelativeLayout>
+	    
+</LinearLayout>
