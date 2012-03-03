@@ -11,6 +11,7 @@ import com.weiboa.activity.WeiboAApplication;
 import com.weiboa.data.StatusProvider;
 import com.weiboa.data.WeiboUser;
 import com.weiboa.util.WeiboPreferences;
+import com.weiboa.util.WeiboUserUtil;
 
 import android.R.string;
 import android.app.Service;
@@ -35,7 +36,6 @@ public class UpdateService extends Service {
 	public static final String NEW_STATUS_INTENT 		= "com.weiboa.data.NEW_STATUS";
 	public static final String NEW_STATUS_EXTRA_COUNT 	= "com.weiboa.data.COUNT_NEW_STATUS";
 	public static final String TWEET_LAST_SINCED_ID		= "last_sinced_id";
-	private ContentResolver mResolver;
 	
 	
 	@Override
@@ -43,7 +43,6 @@ public class UpdateService extends Service {
 		super.onCreate();
 		this.mApplication = (WeiboAApplication)getApplication();
 		mUpdater = new Updater();
-		mResolver = getContentResolver();
 		Log.i(TAG, "onCreate");
 	}
 
@@ -76,86 +75,6 @@ public class UpdateService extends Service {
 	public IBinder onBind(Intent intent) {
 		return null;
 	}
-
-	public int fetchStatusUpdates(){
-
-		WeiboUser wu = WeiboUser.getInstance(mApplication.getWeiboUserDB());
-
-		int count = 0;
-		long sinceId = WeiboPreferences.getDefaultSharedPreferences().getLong(TWEET_LAST_SINCED_ID, 0);
-		long lastId = 0;
-		JSONArray jArray = wu.getWeiboConnect().getFriendsTimeline(sinceId, 0);
-
-		Log.d(TAG, jArray.toString());
-		Log.d(TAG, "Fetching status update");
-
-		if(jArray != null){
-			try {
-				for(int i = 0; i < jArray.length(); i++){
-					JSONObject jObject = jArray.getJSONObject(i);
-
-					long id = jObject.getLong("id");
-					if(id > lastId) {
-						lastId = id;
-					}
-					if(insertTweet(jObject) != null){
-						count ++;
-					}
-				}
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			if(lastId > sinceId){
-				WeiboPreferences.getDefaultSharedPreferences().edit().putLong(TWEET_LAST_SINCED_ID, sinceId).commit();
-			}
-		}
-		return count;
-	}
-	
-	private Uri insertTweet(JSONObject jObject){
-		
-		ContentValues values = new ContentValues();
-		Uri lTweetUri;
-		try {
-			long lTweetId = Long.parseLong(jObject.getString("id"));
-			lTweetUri = ContentUris.withAppendedId(StatusProvider.CONTENT_URI, lTweetId);
-		
-			JSONObject user;
-
-			user = jObject.getJSONObject("user");
-			values.put(StatusProvider.C_ID, lTweetId);
-			values.put(StatusProvider.C_USER, user.getString("screen_name"));
-			String message = null;
-			message = jObject.getString("text");
-			
-			values.put(StatusProvider.C_TEXT, message);
-			values.put(StatusProvider.C_SOURCE, jObject.getString("source"));
-			long created = Date.parse(jObject.getString("created_at"));
-			values.put(StatusProvider.C_CREATED_AT, created);
-			values.put(StatusProvider.C_USER_ID, user.getString("id"));
-			if(jObject.has("thumbnail_pic")){
-				values.put(StatusProvider.C_PIRCTURE, jObject.getString("thumbnail_pic"));
-			}else {
-				values.put(StatusProvider.C_PIRCTURE, "");
-			}
-			
-			if(mResolver.update(lTweetUri, values, null, null) == 0){
-				mResolver.insert(StatusProvider.CONTENT_URI, values);
-			}else {
-				lTweetUri = null;
-			}
-			
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			lTweetUri = null;
-		}
-		
-		return lTweetUri;
-	}
-	
 	
 	/*
 	 *  Thread that performs the actual update form the online service
@@ -177,7 +96,7 @@ public class UpdateService extends Service {
 			{
 				Log.d(TAG, "Updater running");
 				try{
-					int newUpdates = updaterService.fetchStatusUpdates();
+					int newUpdates = WeiboUserUtil.fetchStatusUpdates(mApplication);
 					if(newUpdates > 0)
 					{
 						Log.d(TAG, "We have a new status");

@@ -155,6 +155,11 @@ public class WeiboOAuthConnect extends WeiboConnect{
 		return jArray;
 	}
 
-	
-	
+	@Override
+	public JSONArray getFriendsTimelineUnderMax(long maxId, long limit) {
+		String url = STATUSES_FRIENDS_TIMELINE_URL;
+		return getTimeline(url, 0, maxId, limit, 1);
+
+	}
+
 }

@@ -19,6 +19,7 @@
 package com.weiboa.data;
 
 import java.io.File;
+import java.util.List;
 
 import org.json.JSONObject;
 
@@ -27,6 +28,7 @@ import com.weiboa.util.WeiboPreferences;
 import android.R.string;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Environment;
 import android.util.Log;
 
@@ -92,22 +94,6 @@ public class WeiboUser {
         }
 
     }
-    
-//    private static String prefsDirectory(Context context){
-//        File dir1 = new File(Environment.getDataDirectory(), "data/"
-//                + context.getPackageName());
-//        File dir2 = new File(dir1, "shared_prefs");
-//        return dir2.getAbsolutePath();
-//
-//    }
-//    
-//    private String createFileNameForUser(String username){
-//    	if(username == null){
-//    		username = "New";
-//    	}
-//    	mPrefsFileName = FILE_PREFIX + username;
-//    	return mPrefsFileName;
-//    }
     
     private WeiboUser(WeiboUserDB db){
     	this.mUserDB = db;

@@ -39,5 +39,13 @@ public class WeiboBaseConnect extends WeiboConnect{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public JSONArray getFriendsTimelineUnderMax(long maxId, long limit) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
 	
 }

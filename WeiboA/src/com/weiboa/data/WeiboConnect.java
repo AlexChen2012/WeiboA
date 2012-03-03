@@ -101,5 +101,7 @@ public abstract class WeiboConnect {
     }
     
     public abstract JSONArray getFriendsTimeline(long sinceId, long limit);
+    
+    public abstract JSONArray getFriendsTimelineUnderMax(long maxId, long limit);
 
 }

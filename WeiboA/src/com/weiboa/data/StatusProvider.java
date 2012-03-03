@@ -1,5 +1,8 @@
 package com.weiboa.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.R.string;
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -11,6 +14,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
+
 
 public class StatusProvider extends ContentProvider{
 
@@ -37,7 +41,9 @@ public class StatusProvider extends ContentProvider{
 	public static final String C_PIRCTURE = "pircture";
 	
 	public static final String GET_ALL_ORDER_BY = C_CREATED_AT + " DESC ";
-
+	
+	public static final String[] DB_QUERYBASIC_COLUMNS = {C_ID, C_TEXT, C_USER, C_CREATED_AT, C_PIRCTURE};
+	
 	static final String[] MAX_CREATED_AT_COLUMNS = {"max(" 
 		+ C_CREATED_AT + ")"};
 
@@ -52,7 +58,7 @@ public class StatusProvider extends ContentProvider{
 		//Called only once, first time the DB is created
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			String sql = "create table " + TABLE + "(" + C_ID + " integer primary key, "
+			String sql = "create table " + TABLE + "(" + C_ID + " long primary key, "
 			+ C_CREATED_AT + " long, " + C_USER + " text, " + C_SOURCE + " text, " + C_TEXT + " text, " + C_PIRCTURE +  " text, " + C_USER_ID+ " integer)";
 
 			db.execSQL(sql);
@@ -77,15 +83,12 @@ public class StatusProvider extends ContentProvider{
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
 		long id = this.getId(uri);
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
-		try{
 			if(id < 0){
 				return db.delete(TABLE, selection, selectionArgs);
 			}else{
 				return db.delete(TABLE, C_ID+"="+id, null);
 			}
-		}finally{
-			db.close();
-		}
+
 	}
 
 	@Override
@@ -97,8 +100,7 @@ public class StatusProvider extends ContentProvider{
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
-		try{
-			long id = db.insertOrThrow(TABLE, null, values);
+			long id = db.insertWithOnConflict(TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 			if(id == -1){
 				throw new RuntimeException(String.format
 						("%s : Failed to insert [%s] to [%s] for unknow reason,", 
@@ -106,9 +108,6 @@ public class StatusProvider extends ContentProvider{
 			}else{
 				return ContentUris.withAppendedId(uri, id);
 			}
-		}finally{
-			db.close();
-		}
 	}
 	
 	private long getId(Uri uri){
@@ -129,11 +128,11 @@ public class StatusProvider extends ContentProvider{
 		return true;
 	}
 	
-	public Cursor getStatusUpdates()
-	{
-		SQLiteDatabase db = this.dbHelper.getReadableDatabase();
-		return db.query(TABLE, null, null, null, null, null, GET_ALL_ORDER_BY);
-	}
+//	public Cursor getStatusUpdates()
+//	{
+//		SQLiteDatabase db = this.dbHelper.getReadableDatabase();
+//		return db.query(TABLE, null, null, null, null, null, GET_ALL_ORDER_BY);
+//	}
 
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
@@ -141,8 +140,11 @@ public class StatusProvider extends ContentProvider{
 		long id = this.getId(uri);
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		if(id < 0){
-			//return db.query(statusData.TABLE, projection, selection, selectionArgs, null, null, sortOrder);
-			return getStatusUpdates();
+			if(selection == null){
+				return db.query(TABLE, projection, null, null, null, null, GET_ALL_ORDER_BY);
+			}else{
+				return db.query(TABLE, projection, selection, null, null, null, GET_ALL_ORDER_BY);
+			}
 		}else{
 			return db.query(TABLE, projection, C_ID+"="+id, null, null, null, null);
 		}
@@ -153,15 +155,16 @@ public class StatusProvider extends ContentProvider{
 			String[] selectionArgs) {
 		long id = this.getId(uri);
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
-		try{
-			if( id < 0 ){
-				return db.update(TABLE, values, selection, selectionArgs);
-			}else{
-				return db.update(TABLE, values, C_ID+"="+id, null);
-			}
-		}finally{
-			db.close();
+		if(db.isOpen()){
+				if( id < 0 ){
+					return db.update(TABLE, values, selection, selectionArgs);
+				}else{
+					return db.update(TABLE, values, C_ID+"="+id, null);
+				}	
+				}else{
+			return -1;
 		}
 	}
+	
 	
 }
