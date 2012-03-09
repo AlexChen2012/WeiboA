@@ -113,6 +113,7 @@ public class WeiboUserUtil {
 			values.put(StatusProvider.C_USER_ID, user.getString("id"));
 			if(jObject.has("thumbnail_pic")){
 				values.put(StatusProvider.C_PIRCTURE, jObject.getString("thumbnail_pic"));
+				values.put(StatusProvider.C_ORIGINAL_PIC, jObject.getString("original_pic"));
 			}else {
 				values.put(StatusProvider.C_PIRCTURE, "");
 			}

@@ -25,11 +25,19 @@ public class DownLoadPircuter extends AsyncTask<Void, Void, Void>{
 	String name;
 	AnimationDrawable animation = null;
 	URL url;
+	URL original_url;
 	
 	public DownLoadPircuter(JSONObject jObject){
 		
     	try {
     		url = new URL(jObject.getString("url"));
+    		String orString = jObject.getString("original_url");
+    		
+    		if(orString.isEmpty()){
+    			original_url = null;
+    		}else{
+        		original_url = new URL(orString);
+    		}
     		name = ImageUtil.getImageName(jObject.getString("url"));
             mImageView = (ImageView)jObject.get("imageview");
 		} catch (Exception e) {
@@ -49,7 +57,11 @@ public class DownLoadPircuter extends AsyncTask<Void, Void, Void>{
 	@Override
 	protected void onPostExecute(Void result) {
 		AnimationUtil.stopAnimation(mImageView);
-		ImageUtil.loadImageToView(mImageView, name);
+		if(original_url == null){
+			ImageUtil.loadImageToView(mImageView, name, null);
+		}else{
+			ImageUtil.loadImageToView(mImageView, name, original_url.toString());
+		}
 	}
 
 	@Override

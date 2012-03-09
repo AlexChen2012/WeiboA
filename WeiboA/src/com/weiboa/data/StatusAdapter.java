@@ -106,6 +106,7 @@ public class StatusAdapter<T> extends AbstractAdapter<T>{
 			String text = Html.fromHtml(status.getText()).toString();
 			getText().setText(text);
 			String url = status.getUrl();
+			String original_url = status.getOriginal_url();
 //			Log.d(TAG, "URl: "+ url);
 			if(url.equals("")){
 				getImage().setVisibility(View.GONE);
@@ -114,12 +115,14 @@ public class StatusAdapter<T> extends AbstractAdapter<T>{
 				if(ImageUtil.checkImageExist(url)){
 					AnimationUtil.stopAnimation(getImage());
 					String name = ImageUtil.getImageName(url);
-					ImageUtil.loadImageToView(getImage(), name);
+					
+					ImageUtil.loadImageToView(getImage(), name, original_url);
 				}else{
 					getImage().setVisibility(View.VISIBLE);
 					JSONObject tObject = new JSONObject();
 					try {
 						tObject.put("url", url);
+						tObject.put("original_url", original_url);
 						tObject.put("imageview", getImage());
 						new DownLoadPircuter(tObject).execute();
 					} catch (JSONException e) {

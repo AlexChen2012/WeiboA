@@ -113,7 +113,7 @@ OnItemClickListener, OnItemLongClickListener{
 		startManagingCursor(cursor);
 		List<TweetStatus> ret = new ArrayList<TweetStatus>();
 		for(cursor.moveToFirst();!cursor.isAfterLast();cursor.moveToNext()){
-			TweetStatus status = new TweetStatus((new Long(cursor.getLong(0))), cursor.getString(1), cursor.getString(2), cursor.getLong(3), cursor.getString(4));
+			TweetStatus status = new TweetStatus((new Long(cursor.getLong(0))), cursor.getString(1), cursor.getString(2), cursor.getLong(3), cursor.getString(4), cursor.getString(5));
 			ret.add(status);
 		}
 		return ret;
@@ -128,7 +128,7 @@ OnItemClickListener, OnItemLongClickListener{
 		}
 		int i = 0;
 		for(cursor.moveToFirst();!cursor.isAfterLast() && i < num; cursor.moveToNext(), i++){
-			TweetStatus status = new TweetStatus((new Long(cursor.getLong(0))), cursor.getString(1), cursor.getString(2), cursor.getLong(3), cursor.getString(4));
+			TweetStatus status = new TweetStatus((new Long(cursor.getLong(0))), cursor.getString(1), cursor.getString(2), cursor.getLong(3), cursor.getString(4), cursor.getString(5));
 			ret.add(status);
 		}
 		return ret;
@@ -143,9 +143,6 @@ OnItemClickListener, OnItemLongClickListener{
 		mListView.setOnScrollListener(this);
 		mListView.setOnItemClickListener(this);
 		mListView.setOnItemLongClickListener(this);
-
-		//		mStatusAdapter = new StatusAdapter<TweetStatus>(this, R.layout.row, getStatus());
-		//		mListView.setAdapter(mStatusAdapter);
 
 		//Register the receiver
 		registerReceiver(mReceiver, mFilter, SEND_TIMELINE_NOTIFICATIONS, null);

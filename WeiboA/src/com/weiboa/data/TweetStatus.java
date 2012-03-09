@@ -7,17 +7,27 @@ public class TweetStatus {
 	private String userName;
 	private long time;
 	private String url;
+	private String original_url;
 	
-	public TweetStatus(Long id, String text, String username, long time, String url){
+	public TweetStatus(Long id, String text, String username, long time, String url, String original_url){
 		this.id = id;
 		this.text = text;
 		this.userName = username;
 		this.time = time;
 		this.url = url;
+		this.original_url = original_url;
 	}
 	
 	
 	
+	public String getOriginal_url() {
+		return original_url;
+	}
+
+	public void setOriginal_url(String original_url) {
+		this.original_url = original_url;
+	}
+
 	public String getUrl() {
 		return url;
 	}

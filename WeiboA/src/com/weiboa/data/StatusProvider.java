@@ -39,10 +39,11 @@ public class StatusProvider extends ContentProvider{
 	public static final String C_USER = "user";
 	public static final String C_USER_ID = "user_id";
 	public static final String C_PIRCTURE = "pircture";
+	public static final String C_ORIGINAL_PIC = "original_pic";
 	
 	public static final String GET_ALL_ORDER_BY = C_CREATED_AT + " DESC ";
 	
-	public static final String[] DB_QUERYBASIC_COLUMNS = {C_ID, C_TEXT, C_USER, C_CREATED_AT, C_PIRCTURE};
+	public static final String[] DB_QUERYBASIC_COLUMNS = {C_ID, C_TEXT, C_USER, C_CREATED_AT, C_PIRCTURE, C_ORIGINAL_PIC};
 	
 	static final String[] MAX_CREATED_AT_COLUMNS = {"max(" 
 		+ C_CREATED_AT + ")"};
@@ -59,7 +60,7 @@ public class StatusProvider extends ContentProvider{
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			String sql = "create table " + TABLE + "(" + C_ID + " long primary key, "
-			+ C_CREATED_AT + " long, " + C_USER + " text, " + C_SOURCE + " text, " + C_TEXT + " text, " + C_PIRCTURE +  " text, " + C_USER_ID+ " integer)";
+			+ C_CREATED_AT + " long, " + C_USER + " text, " + C_SOURCE + " text, " + C_TEXT + " text, " + C_PIRCTURE +  " text, " + C_ORIGINAL_PIC +  " text, " + C_USER_ID+ " integer)";
 
 			db.execSQL(sql);
 
